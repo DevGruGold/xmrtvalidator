@@ -9,6 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      asset_analysis: {
+        Row: {
+          analysis_text: string | null
+          asset_id: string | null
+          confidence_score: number | null
+          created_at: string | null
+          estimated_value: number | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          analysis_text?: string | null
+          asset_id?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          estimated_value?: number | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          analysis_text?: string | null
+          asset_id?: string | null
+          confidence_score?: number | null
+          created_at?: string | null
+          estimated_value?: number | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_analysis_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assets: {
         Row: {
           blockchain_network: string | null
