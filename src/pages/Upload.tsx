@@ -1,4 +1,3 @@
-
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,25 +34,48 @@ const Upload = () => {
         return;
       }
 
-      // Prepare form data
-      const formData = new FormData();
-      if (videoFile) formData.append("video", videoFile);
-      if (lidarFile) formData.append("lidar", lidarFile);
-      formData.append("title", title);
-      formData.append("description", description);
+      let videoPath, lidarPath;
 
-      // Call upload function
-      const response = await fetch("/functions/v1/upload-asset", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: formData,
-      });
+      // Upload video if present
+      if (videoFile) {
+        const videoExt = videoFile.name.split('.').pop();
+        videoPath = `${crypto.randomUUID()}.${videoExt}`;
+        const { error: videoUploadError } = await supabase.storage
+          .from('asset_videos')
+          .upload(videoPath, videoFile);
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || "Failed to upload asset");
+        if (videoUploadError) {
+          throw new Error(`Failed to upload video: ${videoUploadError.message}`);
+        }
+      }
+
+      // Upload LiDAR if present
+      if (lidarFile) {
+        const lidarExt = lidarFile.name.split('.').pop();
+        lidarPath = `${crypto.randomUUID()}.${lidarExt}`;
+        const { error: lidarUploadError } = await supabase.storage
+          .from('asset_lidar')
+          .upload(lidarPath, lidarFile);
+
+        if (lidarUploadError) {
+          throw new Error(`Failed to upload LiDAR scan: ${lidarUploadError.message}`);
+        }
+      }
+
+      // Create asset record
+      const { error: assetError } = await supabase
+        .from('assets')
+        .insert({
+          title: title || 'Untitled Asset',
+          description,
+          video_path: videoPath,
+          lidar_path: lidarPath,
+          status: 'pending',
+          validation_status: 'pending'
+        });
+
+      if (assetError) {
+        throw new Error(`Failed to create asset record: ${assetError.message}`);
       }
 
       toast({
@@ -61,7 +83,6 @@ const Upload = () => {
         description: "Your asset has been uploaded and is pending validation.",
       });
 
-      // Navigate to dashboard or validation page
       navigate("/");
     } catch (error) {
       toast({
