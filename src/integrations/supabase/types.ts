@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      assets: {
+        Row: {
+          blockchain_network: string | null
+          created_at: string
+          description: string | null
+          id: string
+          lidar_path: string | null
+          smart_contract_address: string | null
+          status: string
+          title: string | null
+          user_id: string
+          validation_notes: string | null
+          validation_status: string
+          validator_id: string | null
+          video_path: string | null
+        }
+        Insert: {
+          blockchain_network?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lidar_path?: string | null
+          smart_contract_address?: string | null
+          status?: string
+          title?: string | null
+          user_id: string
+          validation_notes?: string | null
+          validation_status?: string
+          validator_id?: string | null
+          video_path?: string | null
+        }
+        Update: {
+          blockchain_network?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          lidar_path?: string | null
+          smart_contract_address?: string | null
+          status?: string
+          title?: string | null
+          user_id?: string
+          validation_notes?: string | null
+          validation_status?: string
+          validator_id?: string | null
+          video_path?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -110,6 +158,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      validators: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          rating: number | null
+          specialty: string | null
+          total_validations: number | null
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          name: string
+          rating?: number | null
+          specialty?: string | null
+          total_validations?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          rating?: number | null
+          specialty?: string | null
+          total_validations?: number | null
+        }
+        Relationships: []
       }
     }
     Views: {
