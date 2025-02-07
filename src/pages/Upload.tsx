@@ -71,7 +71,8 @@ const Upload = () => {
           video_path: videoPath,
           lidar_path: lidarPath,
           status: 'pending',
-          validation_status: 'pending'
+          validation_status: 'pending',
+          user_id: session.user.id
         });
 
       if (assetError) {
